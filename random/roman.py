@@ -9,6 +9,7 @@ def integerValueOfRomanNumeral(s):
         "V": 5,
         "IX": 9,
         "X": 10,
+        "XL": 40,
         "L": 50,
         "XC": 90,
         "C": 100,
@@ -51,7 +52,7 @@ def integerValueOfRomanNumeral(s):
                 result = -1
 
     # go after combined number 2 digit XI, IX, IV, VI, XC, CX
-    # actually only thing care are: IV, IX, XC, CD, CM
+    # actually only thing care are: IV, IX, XL, XC, CD, CM
     debug = True
     if result != -1:
         print "here .... "
@@ -71,7 +72,7 @@ def integerValueOfRomanNumeral(s):
                     #sum += romans[n]
 
             elif curr == "X" and len(queue) > 0:
-                # followed by I  IX
+                # followed by I  IX 9
                 n = queue.pop()
                 print "n -- {0}".format(n)
                 if n == "I":
@@ -81,11 +82,19 @@ def integerValueOfRomanNumeral(s):
                     sum += romans[curr]
                     #sum += romans[n]
 
+            elif curr == "L" and len(queue) > 0:
+                n = queue.pop()
+                if n == "X":
+                    sum += romans["XL"]
+                else:
+                    queue.append(n)
+                    sum += romans[curr]
+
             elif curr == "C" and len(queue) > 0:
-                # followed by X  - XC
+                # followed by X  - XC 90
                 n = queue.pop()
                 print "n -- {0}".format(n)
-                if n == "C":
+                if n == "X":
                     sum += romans["XC"]
                 else:
                     queue.append(n)
@@ -127,4 +136,9 @@ def integerValueOfRomanNumeral(s):
 
 
 print "----"
-print integerValueOfRomanNumeral("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMCMXXXIX")
+print integerValueOfRomanNumeral("MMCDXV")
+
+#MDCCXLI - 1741
+#MMCXLIV - 2144
+
+#MMCDXV
