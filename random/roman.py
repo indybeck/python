@@ -1,6 +1,7 @@
 import re
 from itertools import groupby
 from collections import deque
+import cProfile
 
 def integerValueOfRomanNumeral(s):
     romans = {
@@ -38,32 +39,36 @@ def integerValueOfRomanNumeral(s):
      XLX  --> this is L  so  -1 if this value matches to any of letter's value then return -1
     """
 
-    print s
+    #print s
     # test if romans are incorrect thus, return -1
-    print len([invalid for invalid in invalids if invalid in s])
+    #print len([invalid for invalid in invalids if invalid in s])
 
+    s = s.upper()
     if len([invalid for invalid in invalids if invalid in s]) > 0:
 
         result = -1
-        print result
+        #print result
     else:
         for k, g in groupby(s):
             if k != "M" and len(list(g)) > 3:
                 result = -1
 
+        for l in s:
+            if l not in ["I", "V", "X", "L", "C", "D", "M"]:
+                result = -1
+
     # go after combined number 2 digit XI, IX, IV, VI, XC, CX
     # actually only thing care are: IV, IX, XL, XC, CD, CM
-    debug = True
+    debug = False
     if result != -1:
-        print "here .... "
         queue = deque(list(s))
         while queue:
             curr = queue.pop()
-            print "curr -- {0}".format(curr)
+            #print "curr -- {0}".format(curr)
             if curr == "V" and len(queue) > 0:
                 # followed by I -> IV
                 n = queue.pop()
-                print "n -- {0}".format(n)
+                #print "n -- {0}".format(n)
                 if n == "I":
                     sum += romans["IV"]
                 else:
@@ -74,7 +79,7 @@ def integerValueOfRomanNumeral(s):
             elif curr == "X" and len(queue) > 0:
                 # followed by I  IX 9
                 n = queue.pop()
-                print "n -- {0}".format(n)
+                #print "n -- {0}".format(n)
                 if n == "I":
                     sum += romans["IX"]
                 else:
@@ -93,7 +98,7 @@ def integerValueOfRomanNumeral(s):
             elif curr == "C" and len(queue) > 0:
                 # followed by X  - XC 90
                 n = queue.pop()
-                print "n -- {0}".format(n)
+                #print "n -- {0}".format(n)
                 if n == "X":
                     sum += romans["XC"]
                 else:
@@ -131,12 +136,13 @@ def integerValueOfRomanNumeral(s):
 
         result = sum
 
-    print "sum -->"
+    #print "sum -->"
     return result
 
 
-print "----"
-print integerValueOfRomanNumeral("MMCDXV")
+
+for n in ["MMMDCCCXXI", "mmcxliv", "MDCCXLI", "MMCXLIV", "MMCDXV", "MMDCXXVI", "MMMCCCXXXV", "MMMDCCXXXVIII", "MMDCCLXXI", "DCCCLXXIII", "MMCDXLV", "CCCLXV", "CM", "MMDCCCLV"]:
+    print "Roman numeric {0} = {1}".format(n, integerValueOfRomanNumeral(n))
 
 #MDCCXLI - 1741
 #MMCXLIV - 2144
