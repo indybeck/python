@@ -1,0 +1,62 @@
+
+run 1:
+➜  plagiarism git:(dev) ✗ cat file1.txt
+go for a run
+➜  plagiarism git:(dev) ✗ cat file2.txt
+go for a jog
+
+➜  plagiarism git:(dev) ✗ python detector2.py syns.txt file1.txt file2.txt
+100%
+
+run 2:
+➜  plagiarism git:(dev) ✗ cat file1.txt
+go for a run
+➜  plagiarism git:(dev) ✗ cat file3.txt
+went for a jog
+
+➜  plagiarism git:(dev) ✗ python detector2.py syns.txt file1.txt file3.txt
+50%
+
+run 3: optional arg - tuple size
+➜  plagiarism git:(dev) ✗ python detector2.py syns.txt file1.txt file3.txt 3
+50%
+➜  plagiarism git:(dev) ✗ python detector2.py syns.txt file1.txt file3.txt 4
+0%
+
+
+run 4: wrong number of args
+➜  plagiarism git:(dev) ✗ python detector2.py syns.txt file1.txt file2.txt 3 option2
+ERROR: 3 required args:
+	synonyms_file
+	input_file_1
+	input_file_2
+One optional arg:
+	tuple size(N=3 by default)
+
+run 5: with large file - throws an exception if file size is larger than 1024mb
+➜  plagiarism git:(dev) ✗ python detector2.py syns.txt file1.txt file4.txt
+Traceback (most recent call last):
+  File "detector2.py", line 228, in <module>
+    main()
+  File "detector2.py", line 114, in main
+    raise FileSizeTooLarge("{0} is too large".format(filename))
+__main__.FileSizeTooLarge: file4.txt is too large
+
+run 6: with invalide tuple_size
+file1, file3 has only 4 words.
+ - can't make 10-tuple from these files
+ - also 0 is inappropriate
+➜  plagiarism git:(dev) ✗ python detector2.py syns.txt file1.txt file3.txt 10
+ERROR: Tuple size is too large or too small for input files
+➜  plagiarism git:(dev) ✗ python detector2.py syns.txt file1.txt file3.txt 0
+ERROR: Tuple size is too large or too small for input files
+
+run 7: example unit test output
+ included a couple of simple unit tests in unittest_detector2.py
+➜  plagiarism git:(dev) ✗ python unittest_detector2.py
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+
